@@ -66,6 +66,9 @@ function nearestStepIndex(value) {
 const formatCount = (n) => n.toLocaleString("it-IT");
 
 const CANVAS_SIZE = 640; // coordinate logiche: la risoluzione reale la gestisce prepareCanvas
+
+// Funzione stabile (a livello di modulo) per useChunkedJob: geometria della spirale.
+const geometryJob = (type, count) => buildGeometry(type, count, CANVAS_SIZE);
 const HOVER_RADIUS_MOUSE = 6; // in coordinate logiche
 const HOVER_RADIUS_TOUCH = 24; // un dito e' molto meno preciso del mouse
 
@@ -96,27 +99,19 @@ export default function UlamSpiralViewer({ settings, onChange }) {
   // Geometria (posizioni + indice a griglia) dipende dal conteggio; gli stili
   // (colori/dimensioni) da modalita' e conteggio: separati, cosi' cambiare solo
   // la modalita' non ricalcola le posizioni.
-  const geoJob = useChunkedJob(
-    function* () {
-      return yield* buildGeometry(ULAM, count, CANVAS_SIZE);
-    },
-    [count],
-    sync
-  );
-  const styJob = useChunkedJob(
-    function* () {
-      const sty = yield* buildStyles(engine, count);
-      return { ...sty, mode };
-    },
-    [mode, count],
-    sync
-  );
+  const geoJob = useChunkedJob(geometryJob, ULAM, count, sync);
+  const styJob = useChunkedJob(buildStyles, engine, count, sync);
 
   const geo = geoJob.value;
   const sty = styJob.value;
   // si disegna solo quando geometria e stili corrispondono alla scelta attuale;
   // nel frattempo resta a schermo l'ultimo disegno completo
-  const ready = geo && sty && geo.count === sty.count && sty.mode === mode;
+  const ready =
+    geo !== null &&
+    sty !== null &&
+    geoJob.input[1] === count &&
+    styJob.input[0] === engine &&
+    styJob.input[1] === count;
 
   const computing = !sync && (geoJob.running || styJob.running);
   const progressPct = Math.round(
