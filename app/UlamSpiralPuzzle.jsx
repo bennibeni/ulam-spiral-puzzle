@@ -15,31 +15,12 @@ import {
   Gem,
   Lightbulb,
 } from "lucide-react";
+import UlamSpiralModal from "./UlamSpiralModal";
+import { COLORS, FONT_DISPLAY, FONT_BODY, FONT_MONO } from "./theme";
 
 /* ============================================================
    TOKENS
    ============================================================ */
-const COLORS = {
-  ink: "#0F1218",
-  panel: "#161B23",
-  panelAlt: "#1D2430",
-  line: "#2A303C",
-  lineFaint: "#232933",
-  paper: "#EAE5D9",
-  paperDim: "#9AA0AC",
-  copper: "#C97D3C",
-  copperDim: "#6E4A2A",
-  jade: "#3FBF8F",
-  jadeDim: "#1F6B4F",
-  gold: "#E8C468",
-  danger: "#C1543C",
-};
-
-const FONT_DISPLAY = '"Fraunces", "Iowan Old Style", serif';
-const FONT_BODY =
-  '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
-const FONT_MONO = '"IBM Plex Mono", "SFMono-Regular", monospace';
-
 /* ============================================================
    GRID CONSTRUCTION (Ulam spiral, 12x12, custom origin)
    ============================================================ */
@@ -514,26 +495,29 @@ export default function UlamSpiralPuzzle() {
             >
               La Spirale di Ulam
             </h1>
-            <button
-              onClick={() => setShowRules((s) => !s)}
-              className="usp-btn"
-              aria-expanded={showRules}
-              aria-controls="usp-rules"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                background: "transparent",
-                border: `1px solid ${COLORS.line}`,
-                color: COLORS.paperDim,
-                padding: "7px 12px",
-                borderRadius: 8,
-                fontSize: 13,
-                cursor: "pointer",
-              }}
-            >
-              <Info size={14} aria-hidden="true" /> Come si gioca
-            </button>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              <UlamSpiralModal />
+              <button
+                onClick={() => setShowRules((s) => !s)}
+                className="usp-btn"
+                aria-expanded={showRules}
+                aria-controls="usp-rules"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                  background: "transparent",
+                  border: `1px solid ${COLORS.line}`,
+                  color: COLORS.paperDim,
+                  padding: "7px 12px",
+                  borderRadius: 8,
+                  fontSize: 13,
+                  cursor: "pointer",
+                }}
+              >
+                <Info size={14} aria-hidden="true" /> Come si gioca
+              </button>
+            </div>
           </div>
         </div>
 
